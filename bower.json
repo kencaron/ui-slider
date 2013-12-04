@@ -1,6 +1,6 @@
 {
   "name": "mf-angular-ui-slider",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "This directive allows you to add a slider to your form elements.",
   "author": "https://github.com/kencaron/ui-slider/graphs/contributors",
   "license": "MIT",

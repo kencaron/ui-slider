@@ -2,7 +2,7 @@
  jQuery UI Slider plugin wrapper
 */
 angular.module('ui.slider', []).value('uiSliderConfig',{}).directive('uiSlider', ['uiSliderConfig', '$timeout', function(uiSliderConfig, $timeout) {
-	uiSliderConfig = uiSliderConfig || {};
+    uiSliderConfig = uiSliderConfig || {};
         return {
             require: 'ngModel',
             compile: function () {
@@ -20,13 +20,14 @@ angular.module('ui.slider', []).value('uiSliderConfig',{}).directive('uiSlider',
                     };
                     
                     var init = function() {
-	                    // When ngModel is assigned an array of values then range is expected to be true.
-	                    // Warn user and change range to true else an error occurs when trying to drag handle
- 		                if (angular.isArray(ngModel.$viewValue) && options.range !== true) {
-		                	console.warn('Change your range option of ui-slider. When assigning ngModel an array of values then the range option should be set to true.');
-							options.range = true;
-		                }
-                        elm.slider(options);
+
+                        // When ngModel is assigned an array of values then range is expected to be true.
+                        // Warn user and change range to true else an error occurs when trying to drag handle
+                        if (angular.isArray(ngModel.$viewValue) && options.range !== true) {
+                            console.warn('Change your range option of ui-slider. When assigning ngModel an array of values then the range option should be set to true.');
+                            options.range = true;
+                        }
+                        elm.dragslider(options);
                         init = angular.noop;
                     };
 
@@ -39,19 +40,19 @@ angular.module('ui.slider', []).value('uiSliderConfig',{}).directive('uiSlider',
                         attrs.$observe(property, function(newVal){
                             if (!!newVal) {
                                 init();
-                                elm.slider('option', property, parseNumber(newVal, useDecimals));
+                                elm.dragslider('option', property, parseNumber(newVal, useDecimals));
                             }
                         });
                     });
                     attrs.$observe('disabled', function(newVal){
                         init();
-                        elm.slider('option', 'disabled', !!newVal);
+                        elm.dragslider('option', 'disabled', !!newVal);
                     });
 
                     // Watch ui-slider (byVal) for changes and update
                     scope.$watch(attrs.uiSlider, function(newVal){
                         init();
-                        elm.slider('option', newVal);
+                        elm.dragslider('option', newVal);
                     }, true);
                     
                     // Late-bind to prevent compiler clobbering
@@ -59,6 +60,7 @@ angular.module('ui.slider', []).value('uiSliderConfig',{}).directive('uiSlider',
                     
                     // Update model value from slider
                     elm.bind('slide', function(event, ui){
+                        
                         ngModel.$setViewValue(ui.values || ui.value);
                         scope.$apply();
                     });
@@ -66,6 +68,7 @@ angular.module('ui.slider', []).value('uiSliderConfig',{}).directive('uiSlider',
                     // Update slider from model value
                     ngModel.$render = function(){
                         init();
+
                         var method = options.range === true ? 'values' : 'value';
                         
                         if (isNaN(ngModel.$viewValue)) 
@@ -97,7 +100,7 @@ angular.module('ui.slider', []).value('uiSliderConfig',{}).directive('uiSlider',
                             prevRangeValues.max = ngModel.$viewValue[1];
 
                         }                        
-                        elm.slider(method, ngModel.$viewValue);
+                        elm.dragslider(method, ngModel.$viewValue);
                     };
                     
                     scope.$watch(attrs.ngModel, function(){                        
@@ -107,7 +110,7 @@ angular.module('ui.slider', []).value('uiSliderConfig',{}).directive('uiSlider',
                     }, true);
 
                     function destroy(){
-                        elm.slider('destroy');
+                        elm.dragslider('destroy');
                     }
                     elm.bind('$destroy', destroy);
                 };
